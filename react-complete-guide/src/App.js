@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Person from "./Person/Person";
+import Radium, { StyleRoot } from "radium";
 import "./Person/Person.css";
 import "./App.css";
 
@@ -59,7 +60,10 @@ const App = props => {
     padding: "18px",
     font: "inherit",
     border: "1px solid blue",
-    cursor: "pointer"
+    cursor: "pointer",
+    ":hover": {
+      backgroundColor: "lightgreen",
+      color: "black"
     }
   };
 
@@ -80,6 +84,10 @@ const App = props => {
       </div>
     );
     style.backgroundColor = "red";
+    style[":hover"] = {
+      backgroundColor: "pink",
+      color: "black"
+    };
   }
 
   const classes = [];
@@ -91,6 +99,7 @@ const App = props => {
   }
 
   return (
+    <StyleRoot>
       <div className="App">
         <h1> This is a React App</h1>
         <p className={classes.join(" ")}> This is really working</p>
@@ -100,6 +109,7 @@ const App = props => {
         </button>
         {person}
       </div>
+    </StyleRoot>
   );
 };
 
@@ -141,4 +151,4 @@ const App = props => {
 //   }
 // }
 
-export default App;
+export default Radium(App);
