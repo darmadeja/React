@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import Person from "./Person/Person";
-import Radium, { StyleRoot } from "radium";
-import "./Person/Person.css";
-import "./App.css";
+import Persons from "../Components/Persons/Persons";
+import Cockpit from "../Cockpit/Cockpit";
+import "../Styles/Person.css";
+import styles from "../Styles/App.module.css";
 
 const App = props => {
   const [personState, setPersonState] = useState({
@@ -39,7 +39,6 @@ const App = props => {
 
   const personToggler = () => {
     const doesShow = showState.showPerson;
-    console.log("In personToggler");
     setShowState({
       showPerson: !doesShow
     });
@@ -47,69 +46,34 @@ const App = props => {
 
   const deletePersonHandler = personIndex => {
     const persons = [...personState.person];
-    console.log("In Delete");
     persons.splice(personIndex, 1);
     setPersonState({
       person: persons
     });
   };
 
-  const style = {
-    backgroundColor: "green",
-    color: "white",
-    padding: "18px",
-    font: "inherit",
-    border: "1px solid blue",
-    cursor: "pointer",
-    ":hover": {
-      backgroundColor: "lightgreen",
-      color: "black"
-    }
-  };
-
   let person = null;
+
   if (showState.showPerson) {
     person = (
-      <div>
-        {personState.person.map((eachPerson, index) => {
-          return (
-            <Person
-              name={eachPerson.name}
-              age={eachPerson.age}
-              onclick={() => deletePersonHandler(index)}
-              change={event => nameChangeHandler(event, index)}
-            />
-          );
-        })}
-      </div>
+      <Persons
+        person={personState.person}
+        click={deletePersonHandler}
+        change={nameChangeHandler}
+      />
     );
-    style.backgroundColor = "red";
-    style[":hover"] = {
-      backgroundColor: "pink",
-      color: "black"
-    };
-  }
-
-  const classes = [];
-  if (personState.person.length < 3) {
-    classes.push("red");
-  }
-  if (personState.person.length < 2) {
-    classes.push("bold");
   }
 
   return (
-    <StyleRoot>
-      <div className="App">
-        <h1> This is a React App</h1>
-        <p className={classes.join(" ")}> This is really working</p>
-        {console.log("in App")}
-        <button onClick={personToggler} style={style}>
-          Switch Name
-        </button>
-        {person}
-      </div>
-    </StyleRoot>
+    <div className={styles.App}>
+      <Cockpit
+        title={props.title}
+        personToggler={personToggler}
+        person={personState.person}
+        showperson={showState.showperson}
+      />
+      {person}
+    </div>
   );
 };
 
@@ -151,4 +115,4 @@ const App = props => {
 //   }
 // }
 
-export default Radium(App);
+export default App;
