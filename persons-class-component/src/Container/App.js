@@ -1,8 +1,10 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import Persons from "../Components/Persons/Persons";
 import Cockpit from "../Cockpit/Cockpit";
 import "../Styles/Person.css";
 import styles from "../Styles/App.module.css";
+import withWrapClass from "../hoc/withWrapClass";
+import AuthContext from "../Context/Auth-Context";
 
 class App extends Component {
   constructor(props) {
@@ -17,7 +19,10 @@ class App extends Component {
       { name: "Indhu", age: "25" },
       { name: "Samaya", age: "1" }
     ],
-    showPerson: false
+    showPerson: false,
+    showCockpit: true,
+    changeCounter: 0,
+    authenticated: false
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -28,12 +33,29 @@ class App extends Component {
   componentDidMount() {
     console.log("[App.js] - componentDidMount", this.state, this.props);
   }
+
+  componentDidUpdate() {
+    console.log("[App.js] - componentDidUpdate", this.state, this.props);
+  }
+
+  shouldComponentUpdate(nextProp, nextState) {
+    console.log("[App.js] - shouldComponentUpdate", nextProp, nextState);
+    return true;
+  }
+
   nameChangeHandler = (event, personIndex) => {
     const persons = [...this.state.person];
     persons[personIndex].name = event.target.value;
     this.setState({
-      person: persons
+      person: persons,
+      changeCounter: this.state.changeCounter + 1
     });
+    // this.setState((prevState, props) => {
+    //   return {
+    //     person: persons,
+    //     changeCounter: prevState.changeCounter + 1
+    //   };
+    // });
   };
 
   personToggler = () => {
@@ -51,6 +73,12 @@ class App extends Component {
     });
   };
 
+  loginHandler = () => {
+    this.setState({
+      authenticated: !this.state.authenticated
+    });
+  };
+
   render() {
     console.log("[App.js] - render", this.props);
     let person = null;
@@ -60,26 +88,37 @@ class App extends Component {
           person={this.state.person}
           click={this.deletePersonHandler}
           change={this.nameChangeHandler}
+          authenticated={this.state.authenticated}
         />
       );
     }
     return (
-      <div className={styles.App}>
-        <Cockpit
-          title={this.props.title}
-          personToggler={this.personToggler}
-          person={this.state.person}
-          showperson={this.state.showperson}
-        />
-        {/* {this.state.showPerson ? (
-          <Persons
-            person={this.state.person}
-            click={this.deletePersonHandler}
-            change={this.nameChangeHandler}
-          />
-        ) : null} */}
-        {person}
-      </div>
+      <Fragment>
+        <button
+          onClick={() =>
+            this.setState({ showCockpit: !this.state.showCockpit })
+          }
+        >
+          Show Cockpit
+        </button>
+        <AuthContext.Provider
+          value={{
+            authenticated: this.state.authenticated,
+            login: this.loginHandler
+          }}
+        >
+          {this.state.showCockpit ? (
+            <Cockpit
+              title={this.props.title}
+              personToggler={this.personToggler}
+              personLength={this.state.person.length}
+              showperson={this.state.showperson}
+              login={this.loginHandler}
+            />
+          ) : null}
+          {person}
+        </AuthContext.Provider>
+      </Fragment>
     );
   }
 }
@@ -122,4 +161,4 @@ class App extends Component {
 //   }
 // }
 
-export default App;
+export default withWrapClass(App, styles.App);
