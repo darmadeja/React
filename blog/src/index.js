@@ -9,7 +9,7 @@ axios.defaults.baseURL = "https://jsonplaceholder.typicode.com";
 axios.defaults.headers.common["Authorization"] = "Auth_TOKEN";
 axios.defaults.headers.post["Content-Type"] = "application/XML";
 
-let requestInterceptor = axios.interceptors.request.use(
+axios.interceptors.request.use(
   request => {
     console.log(request);
     return request;
@@ -20,7 +20,7 @@ let requestInterceptor = axios.interceptors.request.use(
 );
 // axios.interceptors.request.eject(requestInterceptor);
 
-let responseInterceptor = axios.interceptors.response.use(
+axios.interceptors.response.use(
   response => {
     console.log(response);
     return response;

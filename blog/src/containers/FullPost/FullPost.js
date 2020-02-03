@@ -6,31 +6,39 @@ import "./FullPost.css";
 class FullPost extends Component {
   state = { loadedPost: null };
 
+  componentDidMount() {
+    console.log("Component Did mount");
+    this.loadData();
+  }
+
   componentDidUpdate() {
+    console.log("Component Did update");
+    this.loadData();
+  }
+
+  loadData = () => {
     if (
-      this.props.id &&
-      (!this.state.loadedPost || this.props.id !== this.state.loadedPost.id)
+      this.props.match.params.id &&
+      (!this.state.loadedPost ||
+        +this.props.match.params.id !== this.state.loadedPost.id)
     ) {
-      //   console.log(
-      //     `https://jsonplaceholder.typicode.com/posts/${this.props.id}`
-      //   );
-      axios.get(`/posts/${this.props.id}`).then(resolve => {
+      console.log("Param ID: ", this.props.match.params.id);
+      axios.get(`/posts/${this.props.match.params.id}`).then(resolve => {
         this.setState({ loadedPost: resolve.data });
       });
     }
-  }
-
+  };
   postDeleteHandler = () => {
-    axios.delete(`/posts/${this.props.id}`).then(resolve => {
+    axios.delete(`/posts/${this.props.match.params.id}`).then(resolve => {
       console.log(resolve);
     });
   };
 
   render() {
     let post = <p>Please select a Post!</p>;
-    // console.log(`https://jsonplaceholder.typicode.com/posts/${this.props.id}`);
+    // console.log(`https://jsonplaceholder.typicode.com/posts/${this.props.match.params.id}`);
 
-    if (this.props.id && this.state.loadedPost) {
+    if (this.props.match.params.id && this.state.loadedPost) {
       post = (
         <div className="FullPost">
           <h1>{this.state.loadedPost.title}</h1>
