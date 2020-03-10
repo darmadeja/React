@@ -19,13 +19,13 @@ class Persons extends Component {
   //     });
   //   };
 
-  personDeletedHandler = personId => {
-    this.setState(prevState => {
-      return {
-        persons: prevState.persons.filter(person => person.id !== personId)
-      };
-    });
-  };
+  // personDeletedHandler = personId => {
+  //   this.setState(prevState => {
+  //     return {
+  //       persons: prevState.persons.filter(person => person.id !== personId)
+  //     };
+  //   });
+  // };
 
   render() {
     console.log("render");
@@ -55,7 +55,8 @@ const mapStateToProps = state => {
 const mapDisptachToProps = dispatch => {
   console.log("dispatch");
   return {
-    onPersonAddHandler: () => dispatch({ type: "ADD_PERSON" }),
+    onPersonAddHandler: (name, age) =>
+      dispatch({ type: "ADD_PERSON", payload: { name: name, age: age } }),
     onPersonDeleteHandler: id => dispatch({ type: "DELETE_PERSON", id: id })
   };
 };

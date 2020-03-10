@@ -7,8 +7,10 @@ const reducer = (state = initialState, action) => {
   if (action.type === "ADD_PERSON") {
     const newPerson = {
       id: Math.random(), // not really unique but good enough here!
-      name: "Max",
-      age: Math.floor(Math.random() * 40)
+      // name: "Max",
+      // age: Math.floor(Math.random() * 40)
+      name: action.payload.name,
+      age: action.payload.age
     };
     return {
       ...state,
