@@ -4,10 +4,6 @@ import Backdrop from "../Backdrop/Backdrop";
 import Aux from "../../../hoc/Aux/Aux";
 
 class Modal extends Component {
-  componentWillUpdate() {
-    console.log("Rending Modal - willupdate");
-  }
-
   shouldComponentUpdate(nextProps) {
     return (
       nextProps.show !== this.props.show ||
@@ -16,6 +12,7 @@ class Modal extends Component {
   }
 
   render() {
+    // console.log("Modal", this.props);
     return (
       <Aux>
         <Backdrop
