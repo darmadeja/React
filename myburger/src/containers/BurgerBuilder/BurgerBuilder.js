@@ -7,12 +7,13 @@ import OrderSummary from "../../components/OrderSummary/OrderSummary";
 import axios from "../../axios-orders";
 import Spinner from "../../components/Utilities/Spinner/Spinner";
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
+import { connect } from "react-redux";
 
 const INGRIDIENT_PRICES = {
   Salad: 0.5,
   Bacon: 0.4,
   Cheese: 0.6,
-  Meat: 0.4
+  Meat: 0.4,
 };
 
 class BurgerBuilder extends Component {
@@ -22,20 +23,20 @@ class BurgerBuilder extends Component {
     purchasable: false,
     purchasing: false,
     loading: false,
-    errorLoading: false
+    errorLoading: false,
   };
 
   componentDidMount = () => {
     axios
       .get("/ingredients.json")
-      .then(response => {
+      .then((response) => {
         this.setState({ ingredients: response.data });
       })
-      .catch(error => this.setState({ errorLoading: true }));
+      .catch((error) => this.setState({ errorLoading: true }));
     // .finally(console.log("Component Did Mount: Current State: ", this.state));
   };
 
-  addIngrideintHandler = type => {
+  addIngrideintHandler = (type) => {
     // console.log("Burger Builder :: Type :", type, "state", this.state);
 
     const oldCount = this.state.ingredients[type];
@@ -53,7 +54,7 @@ class BurgerBuilder extends Component {
     this.updatePurchaseState(updatedIngridient);
   };
 
-  removeIngrideintHandler = type => {
+  removeIngrideintHandler = (type) => {
     if (this.state.ingredients[type] > 0) {
       const oldCount = this.state.ingredients[type];
       const updatedCount = oldCount - 1;
@@ -69,9 +70,9 @@ class BurgerBuilder extends Component {
     }
   };
 
-  updatePurchaseState = ingredients => {
+  updatePurchaseState = (ingredients) => {
     const sum = Object.keys(ingredients)
-      .map(key => {
+      .map((key) => {
         return ingredients[key];
       })
       .reduce((sum, el) => {
@@ -120,7 +121,7 @@ class BurgerBuilder extends Component {
 
     this.props.history.push({
       pathname: "/checkout",
-      search: "?" + queryString
+      search: "?" + queryString,
     });
   };
 
@@ -181,5 +182,14 @@ class BurgerBuilder extends Component {
     );
   }
 }
+
+const mapStateToProp = (state) => {
+  return {
+    ingredients: state.ingredients,
+    totalPrice: state.totalPrice,
+  };
+};
+
+const mapDispatchToProp = (state, dispatch) => {};
 
 export default withErrorHandler(BurgerBuilder, axios);
